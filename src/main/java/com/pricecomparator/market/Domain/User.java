@@ -16,11 +16,11 @@ public class User {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
-
-    @Column(name = "passwordhash", nullable = false)
+    @Column(name = "passwordhash", nullable = false, length = 100)
     private String passwordhash;
+
+    @Column(name = "passwordsalt", nullable = false)
+    private String passwordsalt;
 
     public Integer getId() {
         return id;
@@ -46,12 +46,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordsalt() {
+        return passwordsalt;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordsalt(String passwordsalt) {
+        this.passwordsalt = passwordsalt;
     }
 
     public String getPasswordhash() {

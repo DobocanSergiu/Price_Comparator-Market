@@ -1,14 +1,15 @@
 package com.pricecomparator.market.Controller;
 
+import com.pricecomparator.market.Controller.DTO.Request.CreateUserRequest;
+import com.pricecomparator.market.Controller.DTO.Request.UpdateEmailRequest;
+import com.pricecomparator.market.Controller.DTO.Request.UpdatePasswordRequest;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.Optional;
 
 @RestController
@@ -36,6 +37,61 @@ public class UsersController {
         {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @DeleteMapping("/deleteUser/{Id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable int Id)
+    {
+        boolean success = userService.removeUserById(Id);
+        if(success)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/addUser/")
+    public ResponseEntity<Void> addUser(@RequestBody CreateUserRequest request)
+    {
+        boolean success = userService.addUser(request);
+        if(success)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PatchMapping("/updateUserPassword/")
+    public ResponseEntity<Void> updateUserPassword(@RequestBody UpdatePasswordRequest request)
+    {
+        boolean success = userService.updateUserPassword(request.getUserId(), request.getNewPassword());
+        if(success)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @PatchMapping("/updateUserEmail/")
+    public ResponseEntity<Void> updateUserEmail(@RequestBody UpdateEmailRequest request)
+    {
+        boolean success = userService.updateUserEmail(request.getUserId(), request.getNewEmail());
+        if(success)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
