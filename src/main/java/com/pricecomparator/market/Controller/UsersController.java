@@ -102,6 +102,10 @@ public class UsersController {
         {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
 
     }
 }

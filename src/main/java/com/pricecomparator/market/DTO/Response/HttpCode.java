@@ -1,6 +1,6 @@
 package com.pricecomparator.market.DTO.Response;
 
-public class ErrorCode {
+public class HttpCode {
     private int code;
     private String message;
     public int getCode() {

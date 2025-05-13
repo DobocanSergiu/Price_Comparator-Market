@@ -1,6 +1,8 @@
 package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.Product.*;
+import com.pricecomparator.market.DTO.Response.ErrorCode;
+import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -22,15 +24,23 @@ public class ProductServiceImplementation implements ProductService{
     }
 
     @Override
-    public boolean removeProductById(int Id) {
+    public HttpCode removeProductById(int Id) {
         /// If product with given id is found, it can be deleted
         if(productRepository.existsById(Id)) {
             productRepository.deleteById(Id);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product with id " + Id + " has been removed");
+            response.setCode(204);
+            return response;
         }
         else
         {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Delete failed");
+            response.setCode(400);
+            return response;
+
+
         }
     }
 
