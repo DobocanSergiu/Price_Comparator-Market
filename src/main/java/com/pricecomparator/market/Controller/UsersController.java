@@ -3,9 +3,11 @@ package com.pricecomparator.market.Controller;
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
+import com.pricecomparator.market.DTO.Response.ErrorCode;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +43,8 @@ public class UsersController {
     @DeleteMapping("/deleteUser/{Id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int Id)
     {
-        boolean success = userService.removeUserById(Id);
-        if(success)
+        ErrorCode repsonse = userService.removeUserById(Id);
+        if(repsonse.getCode()==200)
         {
             return ResponseEntity.ok().build();
         }
@@ -55,21 +57,21 @@ public class UsersController {
     @PostMapping("/addUser/")
     public ResponseEntity<Void> addUser(@RequestBody CreateUserRequest request)
     {
-        boolean success = userService.addUser(request);
-        if(success)
+        ErrorCode response = userService.addUser(request);
+        if(response.getCode()==201)
         {
             return ResponseEntity.ok().build();
         }
         else
         {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
     @PatchMapping("/updateUserPassword/")
     public ResponseEntity<Void> updateUserPassword(@RequestBody UpdatePasswordRequest request)
     {
-        boolean success = userService.updateUserPassword(request.getUserId(), request.getNewPassword());
-        if(success)
+        ErrorCode response = userService.updateUserPassword(request.getUserId(), request.getNewPassword());
+        if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();
         }
@@ -83,14 +85,23 @@ public class UsersController {
     @PatchMapping("/updateUserEmail/")
     public ResponseEntity<Void> updateUserEmail(@RequestBody UpdateEmailRequest request)
     {
-        boolean success = userService.updateUserEmail(request.getUserId(), request.getNewEmail());
-        if(success)
+        ErrorCode response = userService.updateUserEmail(request.getUserId(), request.getNewEmail());
+        if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();
         }
-        else
+        else if(response.getCode()==400)
         {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==409)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }
