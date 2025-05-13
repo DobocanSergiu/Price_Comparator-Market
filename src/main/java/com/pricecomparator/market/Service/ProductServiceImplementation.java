@@ -1,7 +1,7 @@
 package com.pricecomparator.market.Service;
 
+import ch.qos.logback.core.spi.ErrorCodes;
 import com.pricecomparator.market.DTO.Request.Product.*;
-import com.pricecomparator.market.DTO.Response.ErrorCode;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Repository.ProductRepository;
@@ -45,102 +45,131 @@ public class ProductServiceImplementation implements ProductService{
     }
 
     @Override
-    public boolean addProduct(CreateProductRequest request) {
-        int newProductId  = request.getProductId();
-        /// Duplicate id's aren't allowed
-        if(productRepository.existsById(newProductId)) {
-            return false;
-        }
-        else
-        {
+    public HttpCode addProduct(CreateProductRequest request) {
+
+
             Product newProduct = new Product();
-            newProduct.setId(newProductId);
             newProduct.setName(request.getName());
             newProduct.setBrand(request.getBrand());
             newProduct.setCategory(request.getCategory());
             newProduct.setQuantity(request.getQuantity());
             newProduct.setMeasurement(request.getMeasurement());
             productRepository.save(newProduct);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product has been added");
+            response.setCode(200);
+            return response;
 
-        }
     }
 
     @Override
-    public boolean updateProductName(UpdateProductNameRequest request) {
+    public HttpCode updateProductName(UpdateProductNameRequest request) {
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
             Product product = productRepository.findById(productId).get();
             product.setName(request.getProductName());
             productRepository.save(product);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product name updated successfully");
+            response.setCode(200);
+            return response;
+
         }
         else {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product name update failed");
+            response.setCode(400);
+            return response;
         }
     }
 
     @Override
-    public boolean updateProductBrand(UpdateProductBrandRequest request) {
+    public HttpCode updateProductBrand(UpdateProductBrandRequest request) {
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
             Product product = productRepository.findById(productId).get();
             product.setBrand(request.getBrand());
             productRepository.save(product);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product brand updated successfully");
+            response.setCode(200);
+            return response;
+
         }
         else {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product brand update failed");
+            response.setCode(400);
+            return response;
+
         }
 
     }
 
     @Override
-    public boolean updateProductCategory(UpdateProductCategoryRequest request) {
+    public HttpCode updateProductCategory(UpdateProductCategoryRequest request) {
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
             Product product = productRepository.findById(productId).get();
             product.setCategory(request.getCategoryName());
             productRepository.save(product);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product category updated successfully");
+            response.setCode(200);
+            return response;
         }
         else {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product category update failed");
+            response.setCode(400);
+            return response;
         }
 
     }
 
     @Override
-    public boolean updateProductQuantity(UpdateProductQuantityRequest request) {
+    public HttpCode updateProductQuantity(UpdateProductQuantityRequest request) {
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
             Product product = productRepository.findById(productId).get();
             product.setQuantity(request.getQuantity());
             productRepository.save(product);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product quantity updated successfully");
+            response.setCode(200);
+            return response;
         }
         else {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product quantity update failed");
+            response.setCode(400);
+            return response;
         }
 
     }
 
     @Override
-    public boolean updateProductMeasurement(UpdateProductMeasurementRequest request) {
+    public HttpCode updateProductMeasurement(UpdateProductMeasurementRequest request) {
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
             Product product = productRepository.findById(productId).get();
             product.setMeasurement(request.getMeasurement());
             productRepository.save(product);
-            return true;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product measurement updated successfully");
+            response.setCode(200);
+            return response;
         }
         else {
-            return false;
+            HttpCode response = new HttpCode();
+            response.setMessage("Product measurement update failed");
+            response.setCode(400);
+            return response;
         }
     }
 }

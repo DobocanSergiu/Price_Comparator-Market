@@ -3,7 +3,7 @@ package com.pricecomparator.market.Controller;
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
-import com.pricecomparator.market.DTO.Response.ErrorCode;
+import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class UsersController {
     @DeleteMapping("/deleteUser/{Id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int Id)
     {
-        ErrorCode repsonse = userService.removeUserById(Id);
+        HttpCode repsonse = userService.removeUserById(Id);
         if(repsonse.getCode()==200)
         {
             return ResponseEntity.ok().build();
@@ -57,7 +57,7 @@ public class UsersController {
     @PostMapping("/addUser/")
     public ResponseEntity<Void> addUser(@RequestBody CreateUserRequest request)
     {
-        ErrorCode response = userService.addUser(request);
+        HttpCode response = userService.addUser(request);
         if(response.getCode()==201)
         {
             return ResponseEntity.ok().build();
@@ -70,7 +70,7 @@ public class UsersController {
     @PatchMapping("/updateUserPassword/")
     public ResponseEntity<Void> updateUserPassword(@RequestBody UpdatePasswordRequest request)
     {
-        ErrorCode response = userService.updateUserPassword(request.getUserId(), request.getNewPassword());
+        HttpCode response = userService.updateUserPassword(request.getUserId(), request.getNewPassword());
         if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();
@@ -85,7 +85,7 @@ public class UsersController {
     @PatchMapping("/updateUserEmail/")
     public ResponseEntity<Void> updateUserEmail(@RequestBody UpdateEmailRequest request)
     {
-        ErrorCode response = userService.updateUserEmail(request.getUserId(), request.getNewEmail());
+        HttpCode response = userService.updateUserEmail(request.getUserId(), request.getNewEmail());
         if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();

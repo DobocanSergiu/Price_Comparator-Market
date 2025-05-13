@@ -1,7 +1,6 @@
 package com.pricecomparator.market.DTO.Request.Product;
 
 public class CreateProductRequest {
-    private int productId;
     private String name;
     private String brand;
     private String category;
@@ -17,13 +16,6 @@ public class CreateProductRequest {
         this.measurement = measurement;
     }
 
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 
     public String getName() {
         return name;
