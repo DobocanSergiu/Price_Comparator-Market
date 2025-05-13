@@ -3,9 +3,11 @@ package com.pricecomparator.market.Service;
 import com.pricecomparator.market.DTO.Request.Product.*;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ProductServiceImplementation implements ProductService{
 
     private final ProductRepository productRepository;
