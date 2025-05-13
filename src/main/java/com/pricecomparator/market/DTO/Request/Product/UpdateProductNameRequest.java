@@ -3,14 +3,14 @@ package com.pricecomparator.market.DTO.Request.Product;
 public class UpdateProductNameRequest {
 
     private int productId;
-    private String productName;
+    private String name;
 
     public String getProductName() {
-        return productName;
+        return name;
     }
 
     public void setProductName(String productName) {
-        this.productName = productName;
+        this.name = productName;
     }
 
     public int getProductId() {

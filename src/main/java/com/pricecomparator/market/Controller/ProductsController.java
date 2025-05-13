@@ -51,7 +51,7 @@ public class ProductsController {
         }
     }
 
-    @PostMapping("/addProduct/{productId}")
+    @PostMapping("/addProduct/")
     public ResponseEntity<Void> addProduct(@RequestBody CreateProductRequest product)
     {
         HttpCode response = productService.addProduct(product);
@@ -128,7 +128,7 @@ public class ProductsController {
 
     }
 
-    @PatchMapping("/updateProductMeasurment")
+    @PatchMapping("/updateProductMeasurement")
     public ResponseEntity<Void> updateProductBrand(@RequestBody UpdateProductMeasurementRequest product)
     {
         HttpCode response = productService.updateProductMeasurement(product);

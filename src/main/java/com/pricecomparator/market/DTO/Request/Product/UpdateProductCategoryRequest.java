@@ -2,7 +2,7 @@ package com.pricecomparator.market.DTO.Request.Product;
 
 public class UpdateProductCategoryRequest {
     private int productId;
-    private String categoryName;
+    private String category;
 
 
     public int getProductId() {
@@ -14,11 +14,11 @@ public class UpdateProductCategoryRequest {
     }
 
     public String getCategoryName() {
-        return categoryName;
+        return category;
     }
 
     public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+        this.category = categoryName;
     }
 
 }
