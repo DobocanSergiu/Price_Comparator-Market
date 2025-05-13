@@ -1,15 +1,14 @@
 package com.pricecomparator.market.Controller;
 
-import com.pricecomparator.market.Controller.DTO.Request.CreateUserRequest;
-import com.pricecomparator.market.Controller.DTO.Request.UpdateEmailRequest;
-import com.pricecomparator.market.Controller.DTO.Request.UpdatePasswordRequest;
+import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
+import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
+import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
 import java.util.Optional;
 
 @RestController

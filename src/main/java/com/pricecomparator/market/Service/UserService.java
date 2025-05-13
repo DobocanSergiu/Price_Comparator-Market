@@ -1,6 +1,6 @@
 package com.pricecomparator.market.Service;
 
-import com.pricecomparator.market.Controller.DTO.Request.CreateUserRequest;
+import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.Domain.User;
 
 import java.util.Optional;

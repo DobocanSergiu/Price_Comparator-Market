@@ -1,4 +1,4 @@
-package com.pricecomparator.market.Controller.DTO.Request;
+package com.pricecomparator.market.DTO.Request.User;
 
 public class UpdateEmailRequest {
     private int userId;

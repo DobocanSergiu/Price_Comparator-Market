@@ -1,12 +1,11 @@
 package com.pricecomparator.market.Service;
 
-import com.pricecomparator.market.Controller.DTO.Request.CreateUserRequest;
+import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Console;
 import java.util.Optional;
 
 import static com.pricecomparator.market.Service.Utilities.Security.generateRandomSalt;
