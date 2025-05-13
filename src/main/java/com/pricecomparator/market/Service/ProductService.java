@@ -6,6 +6,8 @@ import com.pricecomparator.market.Domain.Product;
 import java.util.Optional;
 
 public interface ProductService {
+
+    /// Functions for Products Table
     Optional<Product> getProductById(int Id);
     boolean removeProductById(int Id);
     boolean addProduct(CreateProductRequest request);

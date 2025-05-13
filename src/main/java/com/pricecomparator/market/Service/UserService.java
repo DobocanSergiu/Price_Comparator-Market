@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    /// Functions for user table
+    /// Functions for Users table
     Optional<User> getUserById(int Id);
     boolean removeUserById(int Id);
     boolean addUser(CreateUserRequest user);

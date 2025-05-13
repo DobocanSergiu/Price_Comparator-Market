@@ -29,6 +29,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public boolean removeUserById(int Id)
     {
+        /// User must exist for it to be removed
         if(userRepository.existsById(Id)==true)
         {
             userRepository.deleteById(Id);
