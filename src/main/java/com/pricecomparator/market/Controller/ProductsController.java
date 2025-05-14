@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -160,6 +162,29 @@ public class ProductsController {
         {
             ProductPriceResponse dto = new ProductPriceResponse(requestedProductPrice.get());
             return ResponseEntity.ok(dto);
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getProductsByProductId/{productId}")
+    public ResponseEntity<?> getProductPrices(@PathVariable int productId)
+    {
+        Optional<List<ProductPriceHistory>> requestedProductPrices = productPriceHistoryService.getAllProductPrices(productId);
+        if(requestedProductPrices.isPresent())
+        {
+            /// Create List of dto's
+            List<ProductPriceHistory> productPrices = requestedProductPrices.get();
+            List<ProductPriceResponse> productPriceResponses = new ArrayList<>();
+            for(int i = 0; i < productPrices.size(); i++)
+            {
+                ProductPriceResponse dto = new ProductPriceResponse(productPrices.get(i));
+                productPriceResponses.add(dto);
+
+            }
+            return ResponseEntity.ok(productPriceResponses);
         }
         else
         {
