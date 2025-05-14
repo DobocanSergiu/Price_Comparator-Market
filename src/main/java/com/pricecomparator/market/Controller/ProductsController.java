@@ -69,7 +69,7 @@ public class ProductsController {
         }
     }
 
-    @PatchMapping("/updateProductName/")
+    @PatchMapping("/updateProductName")
     public ResponseEntity<Void> updateProductName(@RequestBody UpdateProductNameRequest product)
     {
         HttpCode response = productService.updateProductName(product);
