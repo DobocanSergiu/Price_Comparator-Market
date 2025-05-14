@@ -32,8 +32,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
     ///Gets price of specific product during a specific date
     @Override
     public Optional<ProductPriceHistory> getProductPriceById(int productPriceId) {
-        Optional<ProductPriceHistory> productPrice = productPriceHistoryRepository.findById(productPriceId);
-        return productPrice;
+        return productPriceHistoryRepository.findById(productPriceId);
     }
 
     /// Gets all prices of a specific product
@@ -44,7 +43,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
             return Optional.empty();
         }
         Product foundProductWithId = productWithId.get();
-        Optional<List<ProductPriceHistory>> productPriceList = productPriceHistoryRepository.getAllByProductid(foundProductWithId.getId());
+        Optional<List<ProductPriceHistory>> productPriceList = productPriceHistoryRepository.getAllByProductid(foundProductWithId);
         return productPriceList;
     }
 
@@ -225,7 +224,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
             return response;
         }
 
-        Optional<List<ProductPriceHistory>> productsWithGivenProductId =productPriceHistoryRepository.getAllByProductid(product_id);
+        Optional<List<ProductPriceHistory>> productsWithGivenProductId =productPriceHistoryRepository.getAllByProductid(productRepository.findById(product_id).get());
         if(!productsWithGivenProductId.isPresent() || productsWithGivenProductId.isEmpty())
         {
             HttpCode response = new HttpCode();

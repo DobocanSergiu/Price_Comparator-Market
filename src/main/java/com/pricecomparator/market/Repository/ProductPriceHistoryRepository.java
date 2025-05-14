@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductPriceHistoryRepository extends JpaRepository<ProductPriceHistory, Integer> {
-    Optional<List<ProductPriceHistory>> getAllByProductid(int productid);
+    Optional<List<ProductPriceHistory>> getAllByProductid(Product productid);
 
     void deleteAllByProductid(Product productid);
 

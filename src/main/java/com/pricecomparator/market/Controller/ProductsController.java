@@ -2,7 +2,10 @@ package com.pricecomparator.market.Controller;
 
 import com.pricecomparator.market.DTO.Request.Product.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
+import com.pricecomparator.market.Domain.ProductPriceHistory;
+import com.pricecomparator.market.Service.ProductPriceHistoryService;
 import com.pricecomparator.market.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +18,17 @@ import java.util.Optional;
 @RequestMapping("/products")
 public class ProductsController {
     private ProductService productService;
+    private ProductPriceHistoryService productPriceHistoryService;
+
 
     @Autowired
-    public ProductsController(ProductService productService) {
+    public ProductsController(ProductService productService, ProductPriceHistoryService productPriceHistoryService) {
         this.productService = productService;
+        this.productPriceHistoryService = productPriceHistoryService;
     }
 
 
+    /// Product Table
     @GetMapping("/getProduct/{productId}")
     public ResponseEntity<Optional<Product>> getProduct(@PathVariable int productId)
     {
@@ -141,6 +148,23 @@ public class ProductsController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    /// Product Price history table
+
+    @GetMapping("/getProductPriceByPriceId/{productPriceId}")
+    public ResponseEntity<?> getProductPrice(@PathVariable int productPriceId)
+    {
+        Optional<ProductPriceHistory> requestedProductPrice = productPriceHistoryService.getProductPriceById(productPriceId);
+        if(requestedProductPrice.isPresent())
+        {
+            ProductPriceResponse dto = new ProductPriceResponse(requestedProductPrice.get());
+            return ResponseEntity.ok(dto);
+        }
+        else
+        {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
