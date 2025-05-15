@@ -1,14 +1,15 @@
 package com.pricecomparator.market.Controller;
 
 import com.pricecomparator.market.DTO.Request.Product.*;
-import com.pricecomparator.market.DTO.Request.ProductPrice.CreateProductPriceRequest;
-import com.pricecomparator.market.DTO.Request.ProductPrice.CreateSaleRequest;
+import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
+import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
 import com.pricecomparator.market.Service.ProductPriceHistoryService;
 import com.pricecomparator.market.Service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
-    private ProductService productService;
-    private ProductPriceHistoryService productPriceHistoryService;
+    private final ProductService productService;
+    private final ProductPriceHistoryService productPriceHistoryService;
 
 
     @Autowired
-    public ProductsController(ProductService productService, ProductPriceHistoryService productPriceHistoryService) {
+    public ProductsController(ProductService productService, ProductPriceHistoryService productPriceHistoryService, ProductPriceHistoryRepository productPriceHistoryRepository) {
         this.productService = productService;
         this.productPriceHistoryService = productPriceHistoryService;
     }
@@ -255,9 +256,9 @@ public class ProductsController {
     }
 
     @PostMapping("/addSalePeriod")
-    public ResponseEntity<Void> addSalePeriod(@RequestBody CreateSaleRequest saleRequest)
+    public ResponseEntity<Void> addSalePeriod(@RequestBody CreateSaleRequest sale)
     {
-        HttpCode response = productPriceHistoryService.addSalePeriod(saleRequest);
+        HttpCode response = productPriceHistoryService.addSalePeriod(sale);
         if(response.getCode()==404)
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -274,6 +275,83 @@ public class ProductsController {
         {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PatchMapping("/updateProductCurrency")
+    public ResponseEntity<Void> updateProductCurrency(@RequestBody UpdateProductPriceCurencyRequest productCurrency)
+    {
+        HttpCode response = productPriceHistoryService.updateCurrency(productCurrency);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else if(response.getCode()==204)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/updatePriceDate")
+    public ResponseEntity<Void> updatePriceDate(@RequestBody UpdateProductPriceDateRequest productDate)
+    {
+        HttpCode response = productPriceHistoryService.updateDate(productDate);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/updatePriceValue")
+    public ResponseEntity<Void> updatePriceValue(@RequestBody UpdateProductPriceRequest productPrice)
+    {
+        HttpCode response = productPriceHistoryService.updatePrice(productPrice);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+    @PatchMapping("/updateProductPriceDecreasePercentage")
+    public ResponseEntity<Void> updateProductPriceDecreasePercentage(@RequestBody UpdateProductPriceDecreasePercentageRequest priceDecreasePercentage)
+    {
+        HttpCode response = productPriceHistoryService.updateProductPriceDecreasePercentage(priceDecreasePercentage);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+
+
     }
 
 

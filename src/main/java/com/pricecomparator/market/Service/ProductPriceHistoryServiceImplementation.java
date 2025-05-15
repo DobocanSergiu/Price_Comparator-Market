@@ -211,7 +211,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
     public HttpCode updateCurrency(UpdateProductPriceCurencyRequest request) {
 
         int product_id = request.getProductId();
-        String currency = request.getCurency();
+        String currency = request.getCurrency();
 
         /// Check to see if product exists
         if(productRepository.existsById(product_id)==false)
@@ -261,7 +261,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
             return response;
         }
         ProductPriceHistory productPrice = productPriceHistoryRepository.findById(productPriceId).get();
-        productPrice.setDate(LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        productPrice.setDate(LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS));
         productPriceHistoryRepository.save(productPrice);
         HttpCode response = new HttpCode();
         response.setCode(200);

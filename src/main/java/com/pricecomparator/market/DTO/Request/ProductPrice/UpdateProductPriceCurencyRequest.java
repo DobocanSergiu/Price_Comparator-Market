@@ -2,14 +2,14 @@ package com.pricecomparator.market.DTO.Request.ProductPrice;
 
 public class UpdateProductPriceCurencyRequest {
     int productId;
-    String curency;
+    String currency;
 
-    public String getCurency() {
-        return curency;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setCurency(String curency) {
-        this.curency = curency;
+    public void setCurrency(String curency) {
+        this.currency = curency;
     }
 
     public int getProductId() {
