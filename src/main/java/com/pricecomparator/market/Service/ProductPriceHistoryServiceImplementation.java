@@ -109,7 +109,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         /// Get product with specific productId
         Product product = productRepository.findById(product_id).get();
         /// Transform initial date represented as string into Instant data type
-        Instant date = LocalDate.parse(request_date).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant date = LocalDate.parse(request_date).atStartOfDay(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS);
 
 
         /// entry with the same product id and price must not exist
