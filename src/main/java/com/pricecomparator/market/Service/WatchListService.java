@@ -7,8 +7,7 @@ import java.util.Optional;
 
 public interface WatchListService {
 
-    Optional<WatchList> getWatchListById(int watchListId);
-    Optional<WatchList> getWatchListByUserId(int userId);
+
     HttpCode addWatchList(int UserId);
     HttpCode deleteWatchListById(int watchListId);
     HttpCode deleteWatchlistByUserId(int userId);

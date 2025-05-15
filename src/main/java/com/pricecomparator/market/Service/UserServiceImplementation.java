@@ -58,18 +58,20 @@ public class UserServiceImplementation implements UserService {
             errorCode.setMessage("User or Email already exists");
             return errorCode;
         }
-        String passwordSalt = generateRandomSalt(8);
-        String hashedPassword =  generateSaltedPassword(user.getPassword(), passwordSalt);
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setEmail(user.getEmail());
-        newUser.setPasswordsalt(passwordSalt);
-        newUser.setPasswordhash(hashedPassword);
-        userRepository.save(newUser);
-        HttpCode errorCode = new HttpCode();
-        errorCode.setCode(200);
-        errorCode.setMessage("User added successfully");
-        return errorCode;
+        else {
+            String passwordSalt = generateRandomSalt(8);
+            String hashedPassword = generateSaltedPassword(user.getPassword(), passwordSalt);
+            User newUser = new User();
+            newUser.setUsername(user.getUsername());
+            newUser.setEmail(user.getEmail());
+            newUser.setPasswordsalt(passwordSalt);
+            newUser.setPasswordhash(hashedPassword);
+            userRepository.save(newUser);
+            HttpCode errorCode = new HttpCode();
+            errorCode.setCode(200);
+            errorCode.setMessage("User added successfully");
+            return errorCode;
+        }
     }
 
     @Override

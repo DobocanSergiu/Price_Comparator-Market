@@ -20,45 +20,15 @@ public class WatchListServiceImplementation implements WatchListService {
 
     }
 
-    ///  Return watchlist by watchlist id
-    @Override
-    public Optional<WatchList> getWatchListById(int watchListId) {
 
-        if(watchListRepository.findById(watchListId).isPresent())
-        {
-            return watchListRepository.findById(watchListId);
-        }
-
-        return Optional.empty();
-    }
-
-
-    /// Return watchlist by user id; 1 user can only have 1 watch list
-    @Override
-    public Optional<WatchList> getWatchListByUserId(int userId) {
-
-        if(userRepository.findById(userId).isEmpty())
-        {
-            return Optional.empty();
-        }
-
-        User user = userRepository.findById(userId).get();
-       if(watchListRepository.findByUserid(user).isEmpty())
-       {
-           return Optional.empty();
-       }
-        return watchListRepository.findByUserid(user);
-
-    }
-
-    /// Create watch list for given user
+    /// Add watch list for given user; A user can only own 1 watch list
     @Override
     public HttpCode addWatchList(int UserId) {
 
         if(userRepository.findById(UserId).isEmpty())
         {
             HttpCode response = new HttpCode();
-            response.setCode(400);
+            response.setCode(404);
             response.setMessage("User not found");
             return response;
 
@@ -106,7 +76,7 @@ public class WatchListServiceImplementation implements WatchListService {
         {
             HttpCode response = new HttpCode();
             response.setCode(404);
-            response.setMessage("WatchList not found");
+            response.setMessage("WatchList user not found");
             return response;
 
         }
@@ -114,7 +84,7 @@ public class WatchListServiceImplementation implements WatchListService {
         if(watchListRepository.findByUserid(user).isEmpty())
         {
             HttpCode response = new HttpCode();
-            response.setCode(409);
+            response.setCode(404);
             response.setMessage("WatchList not found");
             return response;
         }

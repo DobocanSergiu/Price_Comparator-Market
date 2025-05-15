@@ -9,6 +9,7 @@ public class WatchList {
     @Id
     @ColumnDefault("nextval('watch_lists_watchlistid_seq')")
     @Column(name = "watchlistid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
