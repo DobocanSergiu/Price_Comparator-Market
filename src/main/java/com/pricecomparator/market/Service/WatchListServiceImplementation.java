@@ -5,6 +5,7 @@ import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Domain.WatchList;
 import com.pricecomparator.market.Repository.UserRepository;
 import com.pricecomparator.market.Repository.WatchListRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -71,6 +72,7 @@ public class WatchListServiceImplementation implements WatchListService {
 
     ///  Delete watch list by user id
     @Override
+    @Transactional
     public HttpCode deleteWatchlistByUserId(int userId) {
         if(userRepository.findById(userId).isEmpty())
         {

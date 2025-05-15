@@ -64,7 +64,6 @@ public class UsersController {
     public ResponseEntity<Void> addUser(@RequestBody CreateUserRequest request)
     {
         HttpCode response = userService.addUser(request);
-        /// Add heree to create user watch list
         if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();
@@ -161,7 +160,6 @@ public class UsersController {
     }
 
     @DeleteMapping("/deleteWatchListByUserId/{userId}")
-    @Transactional
     public ResponseEntity<Void> deleteWatchListByUserId(@PathVariable int userId)
     {
         HttpCode response = watchListService.deleteWatchlistByUserId(userId);

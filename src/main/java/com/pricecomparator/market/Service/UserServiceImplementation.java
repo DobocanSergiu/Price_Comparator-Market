@@ -3,7 +3,9 @@ package com.pricecomparator.market.Service;
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.User;
+import com.pricecomparator.market.Domain.WatchList;
 import com.pricecomparator.market.Repository.UserRepository;
+import com.pricecomparator.market.Repository.WatchListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +18,13 @@ import static com.pricecomparator.market.Service.Utilities.Security.generateSalt
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
+    private final WatchListRepository watchListRepository;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository)
+    public UserServiceImplementation(UserRepository userRepository, WatchListRepository watchListRepository)
     {
         this.userRepository = userRepository;
+        this.watchListRepository = watchListRepository;
     }
     @Override
     public Optional<User> getUserById(int Id) {
@@ -59,6 +63,7 @@ public class UserServiceImplementation implements UserService {
             return errorCode;
         }
         else {
+            /// Creating user
             String passwordSalt = generateRandomSalt(8);
             String hashedPassword = generateSaltedPassword(user.getPassword(), passwordSalt);
             User newUser = new User();
@@ -67,6 +72,12 @@ public class UserServiceImplementation implements UserService {
             newUser.setPasswordsalt(passwordSalt);
             newUser.setPasswordhash(hashedPassword);
             userRepository.save(newUser);
+
+            /// Creating user watchlist
+            WatchList watchList = new WatchList();
+            watchList.setUserid(newUser);
+            watchListRepository.save(watchList);
+
             HttpCode errorCode = new HttpCode();
             errorCode.setCode(200);
             errorCode.setMessage("User added successfully");
