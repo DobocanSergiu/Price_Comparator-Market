@@ -39,7 +39,7 @@ public class WatchListServiceImplementation implements WatchListService {
         {
             HttpCode response = new HttpCode();
             response.setCode(409);
-            response.setMessage("User already exists");
+            response.setMessage("User already exists in watch list");
             return response;
         }
         WatchList watchList = new WatchList();

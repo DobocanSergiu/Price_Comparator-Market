@@ -9,6 +9,7 @@ public class ShoppingCart {
     @Id
     @ColumnDefault("nextval('shopping_carts_shoppingcartid_seq')")
     @Column(name = "shoppingcartid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

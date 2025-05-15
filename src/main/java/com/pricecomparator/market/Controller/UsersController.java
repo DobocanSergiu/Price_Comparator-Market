@@ -5,6 +5,7 @@ import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.User;
+import com.pricecomparator.market.Service.ShoppingCartService;
 import com.pricecomparator.market.Service.UserService;
 import com.pricecomparator.market.Service.WatchListService;
 import jakarta.transaction.Transactional;
@@ -20,12 +21,14 @@ import java.util.Optional;
 public class UsersController {
     private final UserService userService;
     private final WatchListService watchListService;
+    private final ShoppingCartService shoppingCartService;
 
     @Autowired
-    public UsersController(UserService userService, WatchListService watchListService)
+    public UsersController(UserService userService, WatchListService watchListService, ShoppingCartService shoppingCartService)
     {
         this.userService = userService;
         this.watchListService = watchListService;
+        this.shoppingCartService = shoppingCartService;
     }
 
     /// User table
@@ -163,6 +166,67 @@ public class UsersController {
     public ResponseEntity<Void> deleteWatchListByUserId(@PathVariable int userId)
     {
         HttpCode response = watchListService.deleteWatchlistByUserId(userId);
+        if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    /// Shopping Cart Table
+
+    @PostMapping("/addShoppingCart/{userId}")
+    public ResponseEntity<Void> addShoppingCart(@PathVariable int userId)
+    {
+        HttpCode response = shoppingCartService.addShoppingCart(userId);
+        if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else if(response.getCode()==409)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deleteShoppingCartById/{shoppingCartId}")
+    public ResponseEntity<Void> deleteShoppingCartById(@PathVariable int shoppingCartId)
+    {
+        HttpCode response = shoppingCartService.deleteShoppingCartById(shoppingCartId);
+        if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deleteShoppingCartByUserId/{userId}")
+    public ResponseEntity<Void> deleteShoppingCartByUserId(@PathVariable int userId)
+    {
+        HttpCode response = shoppingCartService.deleteShoppingCartByUserId(userId);
         if(response.getCode()==200)
         {
             return ResponseEntity.ok().build();
