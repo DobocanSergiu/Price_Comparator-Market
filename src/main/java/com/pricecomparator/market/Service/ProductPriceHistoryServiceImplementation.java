@@ -162,8 +162,8 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         /// Get product with specific productId
         Product product = productRepository.findById(product_id).get();
         /// Transform initial date represented as string into Instant data type
-        Instant startDate = LocalDate.parse(start_date).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant endDate = LocalDate.parse(end_date).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant startDate = LocalDate.parse(start_date).atStartOfDay(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS);
+        Instant endDate = LocalDate.parse(end_date).atStartOfDay(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS);
 
         Instant currentDate = startDate;
         while(!currentDate.isAfter(endDate))

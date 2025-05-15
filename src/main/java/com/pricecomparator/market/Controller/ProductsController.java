@@ -2,6 +2,7 @@ package com.pricecomparator.market.Controller;
 
 import com.pricecomparator.market.DTO.Request.Product.*;
 import com.pricecomparator.market.DTO.Request.ProductPrice.CreateProductPriceRequest;
+import com.pricecomparator.market.DTO.Request.ProductPrice.CreateSaleRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
@@ -251,6 +252,28 @@ public class ProductsController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @PostMapping("/addSalePeriod")
+    public ResponseEntity<Void> addSalePeriod(@RequestBody CreateSaleRequest saleRequest)
+    {
+        HttpCode response = productPriceHistoryService.addSalePeriod(saleRequest);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else if(response.getCode()==409)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else if(response.getCode()==204)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
