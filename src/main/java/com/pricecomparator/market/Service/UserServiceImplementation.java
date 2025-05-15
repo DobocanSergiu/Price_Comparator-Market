@@ -2,8 +2,10 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.Domain.ShoppingCart;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Domain.WatchList;
+import com.pricecomparator.market.Repository.ShoppingCartRepository;
 import com.pricecomparator.market.Repository.UserRepository;
 import com.pricecomparator.market.Repository.WatchListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,14 @@ public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
     private final WatchListRepository watchListRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, WatchListRepository watchListRepository)
+    public UserServiceImplementation(UserRepository userRepository, WatchListRepository watchListRepository, ShoppingCartRepository shoppingCartRepository)
     {
         this.userRepository = userRepository;
         this.watchListRepository = watchListRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
     }
     @Override
     public Optional<User> getUserById(int Id) {
@@ -77,6 +81,12 @@ public class UserServiceImplementation implements UserService {
             WatchList watchList = new WatchList();
             watchList.setUserid(newUser);
             watchListRepository.save(watchList);
+
+            /// Creating a shopping cart
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setUserid(newUser);
+            shoppingCartRepository.save(shoppingCart);
+
 
             HttpCode errorCode = new HttpCode();
             errorCode.setCode(200);
