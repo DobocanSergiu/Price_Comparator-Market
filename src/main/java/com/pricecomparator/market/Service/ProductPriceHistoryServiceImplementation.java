@@ -6,6 +6,7 @@ import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
 import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
 import com.pricecomparator.market.Repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -68,26 +69,23 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
 
     /// Removes all prices from a specific product
     @Override
+    @Transactional
     public HttpCode clearPriceHistoryOfProductById(int productId) {
-        if(productRepository.existsById(productId))
-        {
-            Product product = productRepository.findById(productId).get();
-            productPriceHistoryRepository.deleteAllByProductid(product);
+        Optional<Product> productOpt = productRepository.findById(productId);
+
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            productPriceHistoryRepository.deleteAllByProductid(product); // Ensure correct method name
             HttpCode response = new HttpCode();
             response.setCode(204);
             response.setMessage("Product price cleared");
             return response;
-
-        }
-        else
-        {
+        } else {
             HttpCode response = new HttpCode();
             response.setCode(404);
             response.setMessage("Product id not found");
             return response;
         }
-
-
     }
 
     /// Adds new product price

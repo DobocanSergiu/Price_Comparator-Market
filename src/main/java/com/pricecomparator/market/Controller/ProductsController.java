@@ -169,7 +169,7 @@ public class ProductsController {
         }
     }
 
-    @GetMapping("/getProductsByProductId/{productId}")
+    @GetMapping("/getProductPricesByProductId/{productId}")
     public ResponseEntity<?> getProductPrices(@PathVariable int productId)
     {
         Optional<List<ProductPriceHistory>> requestedProductPrices = productPriceHistoryService.getAllProductPrices(productId);
@@ -191,6 +191,46 @@ public class ProductsController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/deletePriceById/{priceId}")
+    public ResponseEntity<Void> deleteProductPriceById(@PathVariable int priceId)
+    {
+
+        HttpCode response = productPriceHistoryService.removeProductPriceById(priceId);
+        if(response.getCode()==204)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else if (response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deletePricesByProductId/{productId}")
+    public ResponseEntity<Void> deleteAllPricesByProductId(@PathVariable int productId)
+    {
+        HttpCode response = productPriceHistoryService.clearPriceHistoryOfProductById(productId);
+        if(response.getCode()==204)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+
 
 
 
