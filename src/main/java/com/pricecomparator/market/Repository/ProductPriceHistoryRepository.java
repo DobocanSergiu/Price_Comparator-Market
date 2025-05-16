@@ -14,4 +14,5 @@ public interface ProductPriceHistoryRepository extends JpaRepository<ProductPric
     void deleteAllByProductid(Product productid);
 
     List<ProductPriceHistory> findByProductidAndDate(Product productid, Instant date);
+    Optional<ProductPriceHistory> findTopByProductidOrderByDateDesc(Product productid);
 }
