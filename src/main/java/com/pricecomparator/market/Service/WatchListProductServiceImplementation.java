@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +44,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
              return response;
          }
 
-        /// User must have watch list
+        /// User must have a watch list
         User user = userRepository.findById(request.getUserId()).get();
         if(watchListRepository.findByUserid(user).isEmpty())
         {
@@ -56,7 +54,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
             return response;
         }
 
-        /// You cannnot have duplicates in a watch list
+        /// You cannot have duplicates in a watch list
         Product product = productRepository.findById(request.getProductId()).get();
         WatchList watchList = watchListRepository.findByUserid(user).get();
         if(watchListProductRepository.existsByProductidAndWatchlistid(product,watchList))
@@ -135,7 +133,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     @Override
     @Transactional
     public HttpCode clearUserWatchList(int userId) {
-        /// User  must exist
+        /// User must exist
         if(userRepository.findById(userId).isEmpty())
         {
             HttpCode response = new HttpCode();

@@ -1,15 +1,15 @@
 package com.pricecomparator.market.DTO.Request.ShoppingCartProduct;
 
 public class CreateShoppingCartProductRequest {
-    private int shoppingCartId;
+    private int userId;
     private int productId;
 
-    public int getShoppingCartId() {
-        return shoppingCartId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setShoppingCartId(int shoppingCartId) {
-        this.shoppingCartId = shoppingCartId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getProductId() {

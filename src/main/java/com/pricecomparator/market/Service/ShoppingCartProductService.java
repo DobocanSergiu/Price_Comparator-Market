@@ -11,7 +11,7 @@ import java.util.List;
 public interface ShoppingCartProductService {
     HttpCode addShoppingCartProduct(@RequestBody CreateShoppingCartProductRequest request);
     HttpCode removeShoppingCartProduct(int shoppingCartProductId);
-    HttpCode clearProductFromUserShoppingCart(int productID, int userId);
+    HttpCode clearProductFromUserShoppingCart(int productId, int userId);
     HttpCode clearShoppingCartList(int userId);
     List<?> getUserShoppingCart(int userId);
 
