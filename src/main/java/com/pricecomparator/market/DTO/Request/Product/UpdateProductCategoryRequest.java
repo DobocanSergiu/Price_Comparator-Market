@@ -4,7 +4,6 @@ public class UpdateProductCategoryRequest {
     private int productId;
     private String category;
 
-
     public int getProductId() {
         return productId;
     }
@@ -13,12 +12,11 @@ public class UpdateProductCategoryRequest {
         this.productId = productId;
     }
 
-    public String getCategoryName() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.category = categoryName;
+    public void setCategory(String category) {
+        this.category = category;
     }
-
 }
