@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,9 +102,9 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
 
     @Override
     @Transactional
-    public HttpCode clearProductFromUserWatchList(int productID, int userId) {
+    public HttpCode clearProductFromUserWatchList(int productId, int userId) {
         /// User and product must exist
-        if(productRepository.findById(productID).isEmpty() || userRepository.findById(userId).isEmpty())
+        if(productRepository.findById(productId).isEmpty() || userRepository.findById(userId).isEmpty())
         {
             HttpCode response = new HttpCode();
             response.setCode(404);
@@ -111,7 +112,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
             return response;
         }
         User user = userRepository.findById(userId).get();
-        Product product = productRepository.findById(productID).get();
+        Product product = productRepository.findById(productId).get();
         /// Watch list must be initialized
         if(watchListRepository.findByUserid(user).isEmpty())
         {
@@ -137,7 +138,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
         {
             HttpCode response = new HttpCode();
             response.setCode(404);
-            response.setMessage("Product or User not found");
+            response.setMessage("User not found");
             return response;
         }
         User user = userRepository.findById(userId).get();
@@ -159,6 +160,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
 
     }
 
+    /// Rewrite
     public Optional<BigDecimal> getCurrentPrice(Product product) {
         Optional<ProductPriceHistory> latestEntry = productPriceHistoryRepository.findTopByProductidOrderByDateDesc(product);
         return latestEntry.map(ProductPriceHistory::getPrice);
@@ -166,44 +168,41 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     @Override
     @Transactional
     public List<?> getUserWatchList(int userId) {
-        /// User  must exist
-        if(userRepository.findById(userId).isEmpty())
-        {
-            return null;
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return Collections.emptyList();  // Better than returning null
         }
-        User user = userRepository.findById(userId).get();
-        /// Watch list must be initialized
-        if(watchListRepository.findByUserid(user).isEmpty()) {
-            return null;
+
+        Optional<WatchList> watchListOpt = watchListRepository.findByUserid(userOpt.get());
+        if (watchListOpt.isEmpty()) {
+            return Collections.emptyList();
         }
-        WatchList watchList = watchListRepository.findByUserid(user).get();
-        /// Formating user watch list
-        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchList);
-        List<WatchListProductResponse> output = new ArrayList<WatchListProductResponse>();
-        for(int i =0;i<userProducts.size();i++)
-        {
-            WatchListProduct product = userProducts.get(i);
-            WatchListProductResponse productResponse = new WatchListProductResponse();
-            productResponse.setProductId(product.getId());
-            productResponse.setTargetPrice(product.getWantedprice());
 
-            /// Get latest price/current price
-            productResponse.setCurrentPrice(new BigDecimal("0"));
-            Product detailedProduct = productRepository.findById(product.getId()).get();
-            if(getCurrentPrice(detailedProduct).isPresent())
-            {
-                productResponse.setCurrentPrice(getCurrentPrice(detailedProduct).get());
-            }
+        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchListOpt.get());
+        List<WatchListProductResponse> output = new ArrayList<>();
 
-            productResponse.setName(product.getProductid().getName());
-            productResponse.setBrand(product.getProductid().getBrand());
-            productResponse.setCategory(product.getProductid().getCategory());
-            productResponse.setQuantity(product.getProductid().getQuantity());
-            productResponse.setMeasurement(product.getProductid().getMeasurement());
-            output.add(productResponse);
+        for (WatchListProduct product : userProducts) {
+            WatchListProductResponse response = new WatchListProductResponse();
+            response.setProductId(product.getProductid().getId());
+            response.setTargetPrice(product.getWantedprice());
 
+            // Current price
+            getCurrentPrice(product.getProductid()).ifPresentOrElse(
+                    response::setCurrentPrice,
+                    () -> response.setCurrentPrice(BigDecimal.ZERO)
+            );
+
+            Product p = product.getProductid();
+            response.setName(p.getName());
+            response.setBrand(p.getBrand());
+            response.setCategory(p.getCategory());
+            response.setQuantity(p.getQuantity());
+            response.setMeasurement(p.getMeasurement());
+
+            output.add(response);
         }
+
         return output;
-
     }
+
 }

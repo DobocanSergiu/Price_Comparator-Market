@@ -5,6 +5,7 @@ import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
 import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.WatchListProduct.WatchListProductResponse;
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Domain.WatchListProduct;
 import com.pricecomparator.market.Repository.WatchListProductRepository;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -280,9 +283,74 @@ public class UsersController {
 
     }
 
+    @DeleteMapping("deleteWatchListProduct/{watchListProductId}")
+    public ResponseEntity<Void> removeWatchListProduct(@PathVariable int watchListProductId)
+    {
+        HttpCode response = watchListProductService.removeWatchListProduct(watchListProductId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 
+    @DeleteMapping("clearProductFromUserWatchList/{productId}/{userId}")
+    public ResponseEntity<Void> clearProductFromUserWatchList(@PathVariable int productId, @PathVariable int userId)
+    {
+        HttpCode response = watchListProductService.clearProductFromUserWatchList(productId, userId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==500)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
 
+    }
 
+    @DeleteMapping("clearUserWatchList/{userId}")
+    public ResponseEntity<Void> clearUserWatchList(@PathVariable int userId)
+    {
+        HttpCode response = watchListProductService.clearUserWatchList(userId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==500)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/getUserWatchList/{userId}")
+    public ResponseEntity<List<?>> getUserWatchList(@PathVariable int userId) {
+        List<?> response = watchListProductService.getUserWatchList(userId);
+        return ResponseEntity.ok(response);
+    }
 
 }
