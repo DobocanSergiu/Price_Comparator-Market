@@ -11,6 +11,7 @@ public class WatchListProduct {
     @Id
     @ColumnDefault("nextval('watch_list_products_watchlistproductid_seq')")
     @Column(name = "watchlistproductid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Or GenerationType.AUTO / SEQUENCE based on DB
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

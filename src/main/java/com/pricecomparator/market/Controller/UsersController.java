@@ -3,10 +3,14 @@ package com.pricecomparator.market.Controller;
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
+import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.User;
+import com.pricecomparator.market.Domain.WatchListProduct;
+import com.pricecomparator.market.Repository.WatchListProductRepository;
 import com.pricecomparator.market.Service.ShoppingCartService;
 import com.pricecomparator.market.Service.UserService;
+import com.pricecomparator.market.Service.WatchListProductService;
 import com.pricecomparator.market.Service.WatchListService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @RestController
@@ -22,13 +27,15 @@ public class UsersController {
     private final UserService userService;
     private final WatchListService watchListService;
     private final ShoppingCartService shoppingCartService;
+    private final WatchListProductService watchListProductService;
 
     @Autowired
-    public UsersController(UserService userService, WatchListService watchListService, ShoppingCartService shoppingCartService)
+    public UsersController(UserService userService, WatchListService watchListService, ShoppingCartService shoppingCartService, WatchListProductService watchListProductService)
     {
         this.userService = userService;
         this.watchListService = watchListService;
         this.shoppingCartService = shoppingCartService;
+        this.watchListProductService = watchListProductService;
     }
 
     /// User table
@@ -241,6 +248,37 @@ public class UsersController {
         }
     }
 
+
+    /// WatchList Product table
+
+    @PostMapping("/addWatchListProduct")
+    public ResponseEntity<Void> addWatchListProduct(@RequestBody CreateWatchListProductRequest request)
+    {
+            HttpCode response=watchListProductService.addWatchListProduct(request);
+
+            if(response.getCode()==200)
+            {
+                return ResponseEntity.ok().build();
+            }
+            else if(response.getCode()==404)
+            {
+                return ResponseEntity.notFound().build();
+            }
+            else if(response.getCode()==409)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            else if(response.getCode()==500)
+            {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+            else
+            {
+                return ResponseEntity.badRequest().build();
+            }
+
+
+    }
 
 
 
