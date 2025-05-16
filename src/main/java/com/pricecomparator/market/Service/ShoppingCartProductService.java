@@ -12,7 +12,7 @@ public interface ShoppingCartProductService {
     HttpCode addShoppingCartProduct(@RequestBody CreateShoppingCartProductRequest request);
     HttpCode removeShoppingCartProduct(int shoppingCartProductId);
     HttpCode clearProductFromUserShoppingCart(int productId, int userId);
-    HttpCode clearShoppingCartList(int userId);
+    HttpCode clearUserShoppingCart(int userId);
     List<?> getUserShoppingCart(int userId);
 
 }

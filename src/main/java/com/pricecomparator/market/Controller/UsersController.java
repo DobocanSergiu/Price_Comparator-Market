@@ -1,5 +1,6 @@
 package com.pricecomparator.market.Controller;
 
+import com.pricecomparator.market.DTO.Request.ShoppingCartProduct.CreateShoppingCartProductRequest;
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
@@ -9,10 +10,7 @@ import com.pricecomparator.market.DTO.Response.WatchListProduct.WatchListProduct
 import com.pricecomparator.market.Domain.User;
 import com.pricecomparator.market.Domain.WatchListProduct;
 import com.pricecomparator.market.Repository.WatchListProductRepository;
-import com.pricecomparator.market.Service.ShoppingCartService;
-import com.pricecomparator.market.Service.UserService;
-import com.pricecomparator.market.Service.WatchListProductService;
-import com.pricecomparator.market.Service.WatchListService;
+import com.pricecomparator.market.Service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,14 +29,16 @@ public class UsersController {
     private final WatchListService watchListService;
     private final ShoppingCartService shoppingCartService;
     private final WatchListProductService watchListProductService;
+    private final ShoppingCartProductService shoppingCartProductService;
 
     @Autowired
-    public UsersController(UserService userService, WatchListService watchListService, ShoppingCartService shoppingCartService, WatchListProductService watchListProductService)
+    public UsersController(UserService userService, WatchListService watchListService, ShoppingCartService shoppingCartService, WatchListProductService watchListProductService, ShoppingCartProductService shoppingCartProductService)
     {
         this.userService = userService;
         this.watchListService = watchListService;
         this.shoppingCartService = shoppingCartService;
         this.watchListProductService = watchListProductService;
+        this.shoppingCartProductService = shoppingCartProductService;
     }
 
     /// User table
@@ -352,5 +352,112 @@ public class UsersController {
         List<?> response = watchListProductService.getUserWatchList(userId);
         return ResponseEntity.ok(response);
     }
+
+    /// Shopping Cart Product Table
+
+
+    @PostMapping("/addShoppingCartProduct")
+    public ResponseEntity<Void> addShoppingCartProduct(@RequestBody CreateShoppingCartProductRequest request)
+    {
+        HttpCode response=shoppingCartProductService.addShoppingCartProduct(request);
+
+        if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==409)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else if(response.getCode()==500)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+
+
+    }
+
+    @DeleteMapping("deleteShoppingCartProduct/{shoppingCartProductId}")
+    public ResponseEntity<Void> removeShoppingCartProduct(@PathVariable int shoppingCartProductId)
+    {
+        HttpCode response = shoppingCartProductService.removeShoppingCartProduct(shoppingCartProductId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @DeleteMapping("clearProductFromUserShoppingCart/{productId}/{userId}")
+    public ResponseEntity<Void> clearProductFromUserShoppingCart(@PathVariable int productId, @PathVariable int userId)
+    {
+        HttpCode response = shoppingCartProductService.clearProductFromUserShoppingCart(productId, userId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==500)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
+    @DeleteMapping("clearUserShoppingCart/{userId}")
+    public ResponseEntity<Void> clearUserShoppingCart(@PathVariable int userId)
+    {
+        HttpCode response = shoppingCartProductService.clearUserShoppingCart(userId);
+        if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==500)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        else if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/getUserShoppingCart/{userId}")
+    public ResponseEntity<List<?>> getUserShoppingCart(@PathVariable int userId) {
+        List<?> response = shoppingCartProductService.getUserShoppingCart(userId);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
+
 
 }

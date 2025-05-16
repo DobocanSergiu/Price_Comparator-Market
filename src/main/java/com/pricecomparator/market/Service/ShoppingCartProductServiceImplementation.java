@@ -130,7 +130,7 @@ public class ShoppingCartProductServiceImplementation implements ShoppingCartPro
 
     @Override
     @Transactional
-    public HttpCode clearShoppingCartList(int userId) {
+    public HttpCode clearUserShoppingCart(int userId) {
         /// User must exist
         if(userRepository.findById(userId).isEmpty())
         {
