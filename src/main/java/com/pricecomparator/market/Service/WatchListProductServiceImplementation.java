@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -161,10 +163,10 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     }
 
     /// Rewrite
-    public Optional<BigDecimal> getCurrentPrice(Product product) {
-        Optional<ProductPriceHistory> latestEntry = productPriceHistoryRepository.findTopByProductidOrderByDateDesc(product);
-        return latestEntry.map(ProductPriceHistory::getPrice);
+    private Optional<BigDecimal> getCurrentPrice(Product product) {
+        return Optional.of(new BigDecimal("0"));
     }
+
     @Override
     @Transactional
     public List<?> getUserWatchList(int userId) {

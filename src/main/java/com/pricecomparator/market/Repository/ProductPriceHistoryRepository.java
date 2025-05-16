@@ -15,4 +15,8 @@ public interface ProductPriceHistoryRepository extends JpaRepository<ProductPric
 
     List<ProductPriceHistory> findByProductidAndDate(Product productid, Instant date);
     Optional<ProductPriceHistory> findTopByProductidOrderByDateDesc(Product productid);
+
+    Optional<ProductPriceHistory> findTopByProductidAndDateLessThanEqualOrderByDateDesc(Product productid, Instant dateIsLessThan);
+
+    Optional<ProductPriceHistory> findTopByProductIdAndDateBeforeOrderByDateDesc(Instant dateBefore);
 }
