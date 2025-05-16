@@ -111,7 +111,6 @@ public class ProductServiceImplementation implements ProductService{
     @Override
     public HttpCode updateProductCategory(UpdateProductCategoryRequest request) {
 
-        System.out.println(request.getCategory()+"+++++++++"+request.getProductId());
         int productId  = request.getProductId();
         if(productRepository.existsById(productId)) {
 
