@@ -17,6 +17,7 @@ public interface ProductService {
     HttpCode updateProductCategory(UpdateProductCategoryRequest request);
     HttpCode updateProductQuantity(UpdateProductQuantityRequest request);
     HttpCode updateProductMeasurement(UpdateProductMeasurementRequest request);
+    HttpCode updateProductStore(UpdateProductStoreRequest request);
 
 
 }

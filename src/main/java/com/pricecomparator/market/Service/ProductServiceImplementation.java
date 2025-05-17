@@ -54,6 +54,7 @@ public class ProductServiceImplementation implements ProductService{
             newProduct.setCategory(request.getCategory());
             newProduct.setQuantity(request.getQuantity());
             newProduct.setMeasurement(request.getMeasurement());
+            newProduct.setStore(request.getStore());
             productRepository.save(newProduct);
             HttpCode response = new HttpCode();
             response.setMessage("Product has been added");
@@ -172,5 +173,27 @@ public class ProductServiceImplementation implements ProductService{
             response.setCode(400);
             return response;
         }
+    }
+
+    @Override
+    public HttpCode updateProductStore(UpdateProductStoreRequest request) {
+        int productId  = request.getProductId();
+        if(productRepository.existsById(productId)) {
+
+            Product product = productRepository.findById(productId).get();
+            product.setStore(request.getStoreName());
+            productRepository.save(product);
+            HttpCode response = new HttpCode();
+            response.setMessage("Product store updated successfully");
+            response.setCode(200);
+            return response;
+        }
+        else {
+            HttpCode response = new HttpCode();
+            response.setMessage("Product store update failed");
+            response.setCode(400);
+            return response;
+        }
+
     }
 }

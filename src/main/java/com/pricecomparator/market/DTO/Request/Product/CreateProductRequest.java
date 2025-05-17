@@ -6,6 +6,7 @@ public class CreateProductRequest {
     private String category;
     private int quantity;
     private String measurement;
+    private String store;
 
 
     public String getMeasurement() {
@@ -49,5 +50,11 @@ public class CreateProductRequest {
         this.quantity = quantity;
     }
 
+    public String getStore() {
+        return store;
+    }
 
+    public void setStore(String store) {
+        this.store = store;
+    }
 }

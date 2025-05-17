@@ -27,6 +27,9 @@ public class Product {
     @Column(name = "measurement", length = 20)
     private String measurement;
 
+    @Column(name="store", length = 50)
+    private String store;
+
     public Integer getId() {
         return id;
     }
@@ -75,4 +78,11 @@ public class Product {
         this.measurement = measurement;
     }
 
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
 }
