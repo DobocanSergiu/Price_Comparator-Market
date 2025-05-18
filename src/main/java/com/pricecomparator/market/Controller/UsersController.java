@@ -6,19 +6,13 @@ import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
 import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
-import com.pricecomparator.market.DTO.Response.WatchListProduct.WatchListProductResponse;
 import com.pricecomparator.market.Domain.User;
-import com.pricecomparator.market.Domain.WatchListProduct;
-import com.pricecomparator.market.Repository.WatchListProductRepository;
 import com.pricecomparator.market.Service.*;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

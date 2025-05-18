@@ -9,7 +9,6 @@ import com.pricecomparator.market.Domain.ProductPriceHistory;
 import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
 import com.pricecomparator.market.Service.ProductPriceHistoryService;
 import com.pricecomparator.market.Service.ProductService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
