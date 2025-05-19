@@ -2,6 +2,8 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
 import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
@@ -14,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -311,6 +314,74 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         response.setCode(200);
         response.setMessage("Product price updated");
         return response;
+
+    }
+
+
+
+    /// New Functions
+    @Override
+    public List<ProductDiscountResponse> getAllDiscounts()
+    {
+        List<ProductPriceHistory> productPriceHistory = productPriceHistoryRepository.findAll();
+        List<ProductDiscountResponse> output = new ArrayList<ProductDiscountResponse>();
+
+        /// Finds all entries that have a price decrease applied
+        for(int i =0;i<productPriceHistory.size();i++)
+        {
+            ProductPriceHistory currentProductPrice  = productPriceHistory.get(i);
+            BigDecimal currentProductPriceDecrease = currentProductPrice.getPricedecreasepercentage();
+            Product currentProduct = productRepository.findById(currentProductPrice.getProductid().getId()).get();
+            if(currentProductPriceDecrease.compareTo(BigDecimal.ZERO) == 1)
+            {
+
+                ProductDiscountResponse current = new ProductDiscountResponse(currentProductPrice);
+                current.setProductName(currentProduct.getName());
+                current.setProductBrand(currentProduct.getBrand());
+                current.setStore(currentProduct.getStore());
+                output.add(current);
+
+
+            }
+        }
+        /// Sort based on percentage decrease. Highest decrease first.
+        output.sort((p1,p2)->p2.getPriceDecreasePercentage().compareTo(p1.getPriceDecreasePercentage()));
+        return output;
+
+    }
+
+    @Override
+    public List<ProductDiscountResponse> getAllPresentOrFutureDiscounts()
+    {
+        List<ProductPriceHistory> productPriceHistory = productPriceHistoryRepository.findAll();
+        List<ProductDiscountResponse> output = new ArrayList<ProductDiscountResponse>();
+
+        /// Finds all entries that have a price decrease applied
+        for(int i =0;i<productPriceHistory.size();i++)
+        {
+            ProductPriceHistory currentProductPrice  = productPriceHistory.get(i);
+            BigDecimal currentProductPriceDecrease = currentProductPrice.getPricedecreasepercentage();
+            Product currentProduct = productRepository.findById(currentProductPrice.getProductid().getId()).get();
+            if(currentProductPriceDecrease.compareTo(BigDecimal.ZERO) == 1)
+            {
+
+                ProductDiscountResponse current = new ProductDiscountResponse(currentProductPrice);
+                current.setProductName(currentProduct.getName());
+                current.setProductBrand(currentProduct.getBrand());
+                current.setStore(currentProduct.getStore());
+                output.add(current);
+
+
+            }
+        }
+        Instant now = Instant.now();
+        output.removeIf(x->{
+            Instant currentDate =Instant.parse(x.getDate());
+            return currentDate.isBefore(now);}
+        );
+        /// Sort based on percentage decrease. Highest decrease first.
+        output.sort((p1,p2)->p2.getPriceDecreasePercentage().compareTo(p1.getPriceDecreasePercentage()));
+        return output;
 
     }
 }

@@ -349,8 +349,18 @@ public class ProductsController {
         {
             return ResponseEntity.badRequest().build();
         }
+    }
 
+    @GetMapping("/getAllDiscounts")
+    public List<?> getAllDiscounts()
+    {
+        return productPriceHistoryService.getAllDiscounts();
+    }
 
+    @GetMapping("/getAllPresentOrFutureDiscounts")
+    public List<?> getAllPresentOrFutureDiscounts()
+    {
+        return productPriceHistoryService.getAllPresentOrFutureDiscounts();
     }
 
 

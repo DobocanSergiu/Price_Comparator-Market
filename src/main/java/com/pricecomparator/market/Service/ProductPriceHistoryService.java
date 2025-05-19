@@ -2,6 +2,8 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public interface ProductPriceHistoryService {
     HttpCode updateDate(UpdateProductPriceDateRequest request);
     HttpCode updatePrice(UpdateProductPriceRequest request);
     HttpCode updateProductPriceDecreasePercentage(UpdateProductPriceDecreasePercentageRequest request);
+    List<ProductDiscountResponse> getAllDiscounts();
+    List<ProductDiscountResponse> getAllPresentOrFutureDiscounts();
+
+
 
 
 }
