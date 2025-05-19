@@ -487,4 +487,65 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         return output;
 
     }
+
+    @Override
+    public List<List<ProductDiscountResponse>> getPricesOfGivenProductAtStores(String productName) {
+        List<String> storeNameList = new ArrayList<String>();
+        List<Integer> productId = new ArrayList<Integer>();
+        List<Product> productList = productRepository.findAllByName(productName);
+        List<List<ProductDiscountResponse>> output = new ArrayList<>();
+
+        /// Get all product Id's and store name of specified product
+        for(int i =0;i<productList.size();i++)
+        {
+            Product product = productList.get(i);
+            storeNameList.add(product.getStore());
+            productId.add(product.getId());
+        }
+
+        /// For each store, make a list of prices for specified product
+        for(int i =0;i<storeNameList.size();i++)
+        {
+            Product currentProduct = productRepository.findById(productId.get(i)).get();
+            List<ProductPriceHistory> productPriceAtStore=productPriceHistoryRepository.getAllByProductid(currentProduct).get();
+            List<ProductDiscountResponse> currentStoreList = new ArrayList<>();
+            for(int j =0;j<productPriceAtStore.size();j++)
+            {
+                ProductPriceHistory currentProductPriceAtStore = productPriceAtStore.get(j);
+                ProductDiscountResponse current = new ProductDiscountResponse(currentProductPriceAtStore);
+                current.setProductName(currentProduct.getName());
+                current.setProductBrand(currentProduct.getBrand());
+                current.setStore(currentProduct.getStore());
+                currentStoreList.add(current);
+            }
+            output.add(currentStoreList);
+        }
+
+        return output;
+
+    }
+
+    @Override
+    public List<ProductDiscountResponse> getPricesOfGivenProductAtSpecificStore(String productName, String store) {
+        Product product = productRepository.findByNameAndStore(productName,store);
+        if(product==null)
+        {
+            return null;
+        }
+        List<ProductPriceHistory> productPriceAtStore=productPriceHistoryRepository.getAllByProductid(product).get();
+        List<ProductDiscountResponse> storeList = new ArrayList<>();
+        for(int j =0;j<productPriceAtStore.size();j++)
+        {
+            ProductPriceHistory currentProductPriceAtStore = productPriceAtStore.get(j);
+            ProductDiscountResponse current = new ProductDiscountResponse(currentProductPriceAtStore);
+            current.setProductName(product.getName());
+            current.setProductBrand(product.getBrand());
+            current.setStore(product.getStore());
+            storeList.add(current);
+        }
+
+        return storeList;
+
+
+    }
 }

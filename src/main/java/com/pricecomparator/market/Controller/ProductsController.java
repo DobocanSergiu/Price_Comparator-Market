@@ -3,6 +3,7 @@ package com.pricecomparator.market.Controller;
 import com.pricecomparator.market.DTO.Request.Product.*;
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
@@ -384,7 +385,18 @@ public class ProductsController {
 
     }
 
+    @GetMapping("/getPricesOfGivenProductAtStores/{productName}")
+    public List<List<ProductDiscountResponse>> getPricesOfGivenProductAtStores (@PathVariable String productName)
+    {
+        return productPriceHistoryService.getPricesOfGivenProductAtStores(productName);
+    }
 
+
+    @GetMapping("/getPricesOfGivenProductAtSpecificStore/{productName}/{store}")
+    public List<ProductDiscountResponse> getPricesOfGivenProductAtSpecificStore(@PathVariable String productName,@PathVariable String store)
+    {
+        return productPriceHistoryService.getPricesOfGivenProductAtSpecificStore(productName,store);
+    }
 
 
 
