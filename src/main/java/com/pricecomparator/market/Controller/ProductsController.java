@@ -351,6 +351,8 @@ public class ProductsController {
         }
     }
 
+
+    /// New
     @GetMapping("/getAllDiscounts")
     public List<?> getAllDiscounts()
     {
@@ -375,6 +377,12 @@ public class ProductsController {
         return productPriceHistoryService.getAllPresentOrFutureDiscountsByStore(store);
     }
 
+    @GetMapping("/getLast24hDiscounts")
+    public List<?> getLast24hDiscounts()
+    {
+        return productPriceHistoryService.getLast24hDiscounts();
+
+    }
 
 
 

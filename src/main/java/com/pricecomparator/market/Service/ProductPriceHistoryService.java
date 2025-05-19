@@ -25,8 +25,5 @@ public interface ProductPriceHistoryService {
     List<ProductDiscountResponse> getAllPresentOrFutureDiscounts();
     List<ProductDiscountResponse> getAllDiscountsByStore(String store);
     List<ProductDiscountResponse> getAllPresentOrFutureDiscountsByStore(String store);
-
-
-
-
+    List<ProductDiscountResponse> getLast24hDiscounts();
 }

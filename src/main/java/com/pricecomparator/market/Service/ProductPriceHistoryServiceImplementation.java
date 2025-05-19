@@ -3,7 +3,6 @@ package com.pricecomparator.market.Service;
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
-import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
 import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
@@ -450,4 +449,42 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         return output;
     }
 
+    @Override
+    public List<ProductDiscountResponse> getLast24hDiscounts()
+    {
+        List<ProductPriceHistory> productPriceHistory = productPriceHistoryRepository.findAll();
+        List<ProductDiscountResponse> output = new ArrayList<ProductDiscountResponse>();
+
+        /// Finds all entries that have a price decrease applied
+        for(int i =0;i<productPriceHistory.size();i++)
+        {
+            ProductPriceHistory currentProductPrice  = productPriceHistory.get(i);
+            BigDecimal currentProductPriceDecrease = currentProductPrice.getPricedecreasepercentage();
+            Product currentProduct = productRepository.findById(currentProductPrice.getProductid().getId()).get();
+            if(currentProductPriceDecrease.compareTo(BigDecimal.ZERO) == 1)
+            {
+
+                ProductDiscountResponse current = new ProductDiscountResponse(currentProductPrice);
+                current.setProductName(currentProduct.getName());
+                current.setProductBrand(currentProduct.getBrand());
+                current.setStore(currentProduct.getStore());
+                output.add(current);
+
+
+            }
+        }
+        /// Remove All Elements that arent in the previous 24 hours time period
+        /// Coordinated Universal Time is 3 hours behind Romania time
+        Instant now = Instant.now().plus(3, ChronoUnit.HOURS);
+
+        System.out.println(now);
+        output.removeIf(x->{
+            Instant currentDate =Instant.parse(x.getDate());
+            return !(currentDate.isBefore(now) &&currentDate.isAfter(now.minus(24,ChronoUnit.HOURS))) ;}
+        );
+        /// Sort based on percentage decrease. Highest decrease first.
+        output.sort((p1,p2)->p2.getPriceDecreasePercentage().compareTo(p1.getPriceDecreasePercentage()));
+        return output;
+
+    }
 }
