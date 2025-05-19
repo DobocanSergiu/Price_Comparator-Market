@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -160,9 +162,48 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
 
     }
 
-    /// Rewrite
-    private Optional<BigDecimal> getCurrentPrice(Product product) {
-        return Optional.of(new BigDecimal("0"));
+    public BigDecimal getCurrentPriceByProductId(int productId) {
+        // Fetch the product by ID
+        Product wantedIdProduct = productRepository.findById(productId).orElse(null);
+        if (wantedIdProduct == null) {
+            throw new RuntimeException("Product not found with ID: " + productId);
+        }
+
+        // Fetch all price history entries for the product
+        List<ProductPriceHistory> productPricesList = productPriceHistoryRepository.getAllByProductid(wantedIdProduct).orElse(new ArrayList<>());
+
+        if (productPricesList.isEmpty()) {
+            return BigDecimal.ZERO; // or throw an exception depending on your logic
+        }
+
+        Instant today = Instant.now();
+        ProductPriceHistory closestPrice = null;
+
+        for (ProductPriceHistory priceHistory : productPricesList) {
+            Instant priceDate = priceHistory.getDate();
+
+            if (priceDate.isAfter(today)) {
+                continue; // Skip future prices
+            }
+
+            // If it's exactly today, return it immediately
+            if (priceDate.truncatedTo(ChronoUnit.DAYS).equals(today.truncatedTo(ChronoUnit.DAYS))) {
+                return priceHistory.getPrice();
+            }
+
+            // Keep track of the most recent price before today
+            if (closestPrice == null || priceDate.isAfter(closestPrice.getDate())) {
+                closestPrice = priceHistory;
+            }
+        }
+
+        // Return the closest price from the past if found, otherwise 0
+        if (closestPrice != null) {
+            return closestPrice.getPrice();
+        }
+        else {
+            return BigDecimal.ZERO;
+        }
     }
 
     @Override
@@ -186,11 +227,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
             response.setProductId(product.getProductid().getId());
             response.setTargetPrice(product.getWantedprice());
 
-            // Current price
-            getCurrentPrice(product.getProductid()).ifPresentOrElse(
-                    response::setCurrentPrice,
-                    () -> response.setCurrentPrice(BigDecimal.ZERO)
-            );
+            response.setCurrentPrice(getCurrentPriceByProductId(product.getProductid().getId()));
 
             Product p = product.getProductid();
             response.setName(p.getName());
