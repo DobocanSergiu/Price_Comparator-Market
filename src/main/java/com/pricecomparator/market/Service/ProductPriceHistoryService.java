@@ -23,6 +23,8 @@ public interface ProductPriceHistoryService {
     HttpCode updateProductPriceDecreasePercentage(UpdateProductPriceDecreasePercentageRequest request);
     List<ProductDiscountResponse> getAllDiscounts();
     List<ProductDiscountResponse> getAllPresentOrFutureDiscounts();
+    List<ProductDiscountResponse> getAllDiscountsByStore(String store);
+    List<ProductDiscountResponse> getAllPresentOrFutureDiscountsByStore(String store);
 
 
 

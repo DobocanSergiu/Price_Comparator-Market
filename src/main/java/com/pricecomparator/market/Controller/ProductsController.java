@@ -363,6 +363,20 @@ public class ProductsController {
         return productPriceHistoryService.getAllPresentOrFutureDiscounts();
     }
 
+    @GetMapping("/getAllDiscountsByStore/{store}")
+    public List<?> getAllDiscountsByStore(@PathVariable String store)
+    {
+        return productPriceHistoryService.getAllDiscountsByStore(store);
+    }
+
+    @GetMapping("/getAllPresentOrFutureDiscountsByStore/{store}")
+    public List<?> getAllPresentOrFutureDiscountsByStore(@PathVariable String store)
+    {
+        return productPriceHistoryService.getAllPresentOrFutureDiscountsByStore(store);
+    }
+
+
+
 
 
 
