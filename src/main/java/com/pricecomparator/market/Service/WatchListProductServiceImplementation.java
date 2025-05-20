@@ -206,12 +206,12 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
         }
     }
 
-    @Override
     @Transactional
+    @Override
     public List<?> getUserWatchList(int userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
-            return Collections.emptyList();  // Better than returning null
+            return Collections.emptyList();
         }
 
         Optional<WatchList> watchListOpt = watchListRepository.findByUserid(userOpt.get());
@@ -226,9 +226,7 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
             WatchListProductResponse response = new WatchListProductResponse();
             response.setProductId(product.getProductid().getId());
             response.setTargetPrice(product.getWantedprice());
-
             response.setCurrentPrice(getCurrentPriceByProductId(product.getProductid().getId()));
-
             Product p = product.getProductid();
             response.setName(p.getName());
             response.setBrand(p.getBrand());
@@ -241,5 +239,43 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
 
         return output;
     }
+
+    @Transactional
+    @Override
+    public List<?> getUserWatchListAtTargetOrLower(int userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Optional<WatchList> watchListOpt = watchListRepository.findByUserid(userOpt.get());
+        if (watchListOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchListOpt.get());
+        List<WatchListProductResponse> output = new ArrayList<>();
+
+        for (WatchListProduct product : userProducts) {
+            WatchListProductResponse response = new WatchListProductResponse();
+            response.setProductId(product.getProductid().getId());
+            response.setTargetPrice(product.getWantedprice());
+            response.setCurrentPrice(getCurrentPriceByProductId(product.getProductid().getId()));
+            Product p = product.getProductid();
+            response.setName(p.getName());
+            response.setBrand(p.getBrand());
+            response.setCategory(p.getCategory());
+            response.setQuantity(p.getQuantity());
+            response.setMeasurement(p.getMeasurement());
+            if(response.getCurrentPrice().compareTo(response.getTargetPrice()) <= 0 )
+            {
+
+                output.add(response);
+            }
+        }
+
+        return output;
+    }
+
 
 }

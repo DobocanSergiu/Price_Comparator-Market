@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -530,7 +531,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         Product product = productRepository.findByNameAndStore(productName,store);
         if(product==null)
         {
-            return null;
+            return Collections.emptyList();
         }
         List<ProductPriceHistory> productPriceAtStore=productPriceHistoryRepository.getAllByProductid(product).get();
         List<ProductDiscountResponse> storeList = new ArrayList<>();
