@@ -209,17 +209,17 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     @Transactional
     @Override
     public List<?> getUserWatchList(int userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        Optional<User> users = userRepository.findById(userId);
+        if (users.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Optional<WatchList> watchListOpt = watchListRepository.findByUserid(userOpt.get());
-        if (watchListOpt.isEmpty()) {
+        Optional<WatchList> watchLists = watchListRepository.findByUserid(users.get());
+        if (watchLists.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchListOpt.get());
+        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchLists.get());
         List<WatchListProductResponse> output = new ArrayList<>();
 
         for (WatchListProduct product : userProducts) {
@@ -243,17 +243,17 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     @Transactional
     @Override
     public List<?> getUserWatchListAtTargetOrLower(int userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        Optional<User> users = userRepository.findById(userId);
+        if (users.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Optional<WatchList> watchListOpt = watchListRepository.findByUserid(userOpt.get());
-        if (watchListOpt.isEmpty()) {
+        Optional<WatchList> watchLists = watchListRepository.findByUserid(users.get());
+        if (watchLists.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchListOpt.get());
+        List<WatchListProduct> userProducts = watchListProductRepository.getAllByWatchlistid(watchLists.get());
         List<WatchListProductResponse> output = new ArrayList<>();
 
         for (WatchListProduct product : userProducts) {
