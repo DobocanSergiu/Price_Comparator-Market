@@ -16,6 +16,5 @@ public interface UserService {
     HttpCode updateUserEmail(int Id,String newEmail);
 
 
-
-
+    HttpCode validateLogin(String username, String password);
 }

@@ -4,9 +4,11 @@ import com.pricecomparator.market.DTO.Request.ShoppingCartProduct.CreateShopping
 import com.pricecomparator.market.DTO.Request.User.CreateUserRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdateEmailRequest;
 import com.pricecomparator.market.DTO.Request.User.UpdatePasswordRequest;
+import com.pricecomparator.market.DTO.Request.User.ValidateLoginRequest;
 import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.Domain.User;
+import com.pricecomparator.market.Repository.UserRepository;
 import com.pricecomparator.market.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -453,6 +455,28 @@ public class UsersController {
     public ResponseEntity<List<?>> getUserWatchListAtTargetOrLower(@PathVariable int userId) {
         List<?> response = watchListProductService.getUserWatchListAtTargetOrLower(userId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/validateLogin")
+    public ResponseEntity<HttpCode> validateLogin(@RequestBody ValidateLoginRequest request)
+    {
+        HttpCode response = userService.validateLogin(request.getUsername(), request.getPassword());
+        if(response.getCode()==200)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else if(response.getCode()==404)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        else if(response.getCode()==401)
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 

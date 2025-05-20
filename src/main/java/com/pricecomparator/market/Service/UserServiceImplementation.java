@@ -9,6 +9,7 @@ import com.pricecomparator.market.Repository.ShoppingCartRepository;
 import com.pricecomparator.market.Repository.UserRepository;
 import com.pricecomparator.market.Repository.WatchListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -154,5 +155,35 @@ public class UserServiceImplementation implements UserService {
             errorCode.setMessage("User updated successfully");
             return errorCode;
         }
+    }
+
+    @Override
+    public HttpCode validateLogin(String username, String password) {
+        HttpCode errorCode = new HttpCode();
+        Optional<User> user = userRepository.findUserByUsername(username);
+        if(!user.isPresent()) {
+            errorCode.setCode(404);
+            errorCode.setMessage("User not found or request is invalid");
+        }
+        else
+        {
+            User foundUser = user.get();
+            String databasePassword = foundUser.getPasswordhash();
+            String databaseSalt = foundUser.getPasswordsalt();
+            String saltedPassword = password + databaseSalt;
+
+            if(BCrypt.checkpw(saltedPassword,databasePassword)) {
+                errorCode.setCode(200);
+                errorCode.setMessage("User logged in successfully");
+            }
+            else
+            {
+                errorCode.setCode(401);
+                errorCode.setMessage("Login failed");
+            }
+
+
+        }
+        return errorCode;
     }
 }
