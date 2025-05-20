@@ -17,4 +17,6 @@ public interface ProductPriceHistoryRepository extends JpaRepository<ProductPric
     List<ProductPriceHistory> findByProductidAndDate(Product productid, Instant date);
 
     List<ProductPriceHistory> getAllByPricedecreasepercentage(BigDecimal pricedecreasepercentage);
+
+    Optional<ProductPriceHistory> findByProductid(Product productid);
 }

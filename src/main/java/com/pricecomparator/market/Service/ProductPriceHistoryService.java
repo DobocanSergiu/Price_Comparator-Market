@@ -2,6 +2,7 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductBestBuyResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
@@ -30,4 +31,5 @@ public interface ProductPriceHistoryService {
     List<ProductDiscountResponse>  getPricesOfGivenProductAtSpecificStore(String productName,String store);
 
 
+    ProductBestBuyResponse getBestBuy(String productName);
 }

@@ -2,6 +2,7 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.ProductPrice.*;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.ProductPrice.ProductBestBuyResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
@@ -11,14 +12,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductPriceHistoryServiceImplementation implements ProductPriceHistoryService{
@@ -549,4 +548,107 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
 
 
     }
+
+    public BigDecimal getCurrentPriceByProductId(int productId) {
+        // Fetch the product by ID
+        Product wantedIdProduct = productRepository.findById(productId).orElse(null);
+        if (wantedIdProduct == null) {
+            throw new RuntimeException("Product not found with ID: " + productId);
+        }
+
+        // Fetch all price history entries for the product
+        List<ProductPriceHistory> productPricesList = productPriceHistoryRepository.getAllByProductid(wantedIdProduct).orElse(new ArrayList<>());
+
+        if (productPricesList.isEmpty()) {
+            return BigDecimal.ZERO; // or throw an exception depending on your logic
+        }
+
+        Instant today = Instant.now();
+        ProductPriceHistory closestPrice = null;
+
+        for (ProductPriceHistory priceHistory : productPricesList) {
+            Instant priceDate = priceHistory.getDate();
+
+            if (priceDate.isAfter(today)) {
+                continue; // Skip future prices
+            }
+
+            // If it's exactly today, return it immediately
+            if (priceDate.truncatedTo(ChronoUnit.DAYS).equals(today.truncatedTo(ChronoUnit.DAYS))) {
+                return priceHistory.getPrice();
+            }
+
+            // Keep track of the most recent price before today
+            if (closestPrice == null || priceDate.isAfter(closestPrice.getDate())) {
+                closestPrice = priceHistory;
+            }
+        }
+
+        // Return the closest price from the past if found, otherwise 0
+        if (closestPrice != null) {
+            return closestPrice.getPrice();
+        }
+        else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public ProductBestBuyResponse getBestBuy(String productName) {
+        if (productName == null || productName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Product name must not be null or empty.");
+        }
+
+        List<Product> productList = productRepository.findAllByName(productName);
+
+        if (productList == null || productList.isEmpty()) {
+            throw new RuntimeException("No products found with name: " + productName);
+        }
+
+        BigDecimal bestValue = null;
+        Product bestProduct = null;
+
+        for (Product product : productList) {
+            BigDecimal currentPrice = getCurrentPriceByProductId(product.getId());
+            String measurement = product.getMeasurement();
+            double quantity = product.getQuantity();
+
+            if ("ml".equalsIgnoreCase(measurement) || "g".equalsIgnoreCase(measurement)) {
+                quantity = quantity / 1000.0;
+            }
+
+            if (quantity <= 0) {
+                continue; // avoid division by zero or nonsense data
+            }
+
+            BigDecimal quantityBD = BigDecimal.valueOf(quantity);
+            BigDecimal currentValue = currentPrice.divide(quantityBD, 4, RoundingMode.HALF_UP);
+
+            if (bestValue == null || currentValue.compareTo(bestValue) < 0) {
+                bestValue = currentValue;
+                bestProduct = product;
+            }
+        }
+
+        if (bestProduct == null) {
+            throw new RuntimeException("Could not determine best buy for product: " + productName);
+        }
+
+        BigDecimal finalPrice = getCurrentPriceByProductId(bestProduct.getId());
+
+        Optional<ProductPriceHistory> priceHistoryOpt = productPriceHistoryRepository.findByProductid(bestProduct);
+
+        String currency = priceHistoryOpt
+                .map(ProductPriceHistory::getCurrency)
+                .orElse("UNKNOWN"); // or throw custom error
+        ProductBestBuyResponse output = new ProductBestBuyResponse();
+        output.setProductId(bestProduct.getId());
+        output.setProductName(productName);
+        output.setBrandName(bestProduct.getBrand());
+        output.setPrice(finalPrice);
+        output.setCurrency(currency);
+
+        return output;
+    }
+
 }
