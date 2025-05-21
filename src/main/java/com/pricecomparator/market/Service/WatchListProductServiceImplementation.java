@@ -2,6 +2,7 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.WatchListProduct.MostWantedRequest;
 import com.pricecomparator.market.DTO.Response.WatchListProduct.WatchListProductResponse;
 import com.pricecomparator.market.Domain.*;
 import com.pricecomparator.market.Repository.*;
@@ -12,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WatchListProductServiceImplementation implements WatchListProductService {
@@ -275,6 +273,57 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
         }
 
         return output;
+    }
+
+    @Transactional
+    @Override
+    public MostWantedRequest getMostWantedProduct()
+    {
+        List<WatchListProduct> allWatchListProducts = watchListProductRepository.findAll();
+        Map<Integer,Integer> dictionary = new HashMap<>();
+        for(int i=0;i<allWatchListProducts.size();i++)
+        {
+            Product product = allWatchListProducts.get(i).getProductid();
+            int productId = product.getId();
+            if(dictionary.containsKey(productId))
+            {
+                dictionary.put(productId,dictionary.get(productId)+1);
+            }
+            else
+            {
+                dictionary.put(productId,1);
+            }
+
+        }
+        int maxKey = -1;
+        int maxValue = -1;
+
+        /// Create list of id's
+        List<Integer> keys = new ArrayList<>(dictionary.keySet());
+
+        /// Compute most common key aka product id
+        for (int i = 0; i < keys.size(); i++) {
+            int key = keys.get(i);
+            int value = dictionary.get(key);
+
+            if (value > maxValue) {
+                maxValue = value;
+                maxKey = key;
+            }
+        }
+
+        Product resultProduct = productRepository.findById(maxKey).get();
+        MostWantedRequest mostWantedRequest = new MostWantedRequest();
+        mostWantedRequest.setProductId(resultProduct.getId());
+        mostWantedRequest.setName(resultProduct.getName());
+        mostWantedRequest.setBrand(resultProduct.getBrand());
+        mostWantedRequest.setStore(resultProduct.getStore());
+        mostWantedRequest.setCategory(resultProduct.getCategory());
+        mostWantedRequest.setQuantity(resultProduct.getQuantity());
+        mostWantedRequest.setMeasurement(resultProduct.getMeasurement());
+        return mostWantedRequest;
+
+
     }
 
 

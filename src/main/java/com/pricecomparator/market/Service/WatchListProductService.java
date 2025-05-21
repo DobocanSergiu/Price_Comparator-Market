@@ -2,6 +2,7 @@ package com.pricecomparator.market.Service;
 
 import com.pricecomparator.market.DTO.Request.WatchListProduct.CreateWatchListProductRequest;
 import com.pricecomparator.market.DTO.Response.HttpCode;
+import com.pricecomparator.market.DTO.Response.WatchListProduct.MostWantedRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,4 +19,7 @@ public interface WatchListProductService {
 
     @Transactional
     List<?> getUserWatchListAtTargetOrLower(int userId);
+
+    @Transactional
+    MostWantedRequest getMostWantedProduct();
 }

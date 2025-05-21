@@ -6,11 +6,13 @@ import com.pricecomparator.market.DTO.Response.HttpCode;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductBestBuyResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductDiscountResponse;
 import com.pricecomparator.market.DTO.Response.ProductPrice.ProductPriceResponse;
+import com.pricecomparator.market.DTO.Response.WatchListProduct.MostWantedRequest;
 import com.pricecomparator.market.Domain.Product;
 import com.pricecomparator.market.Domain.ProductPriceHistory;
 import com.pricecomparator.market.Repository.ProductPriceHistoryRepository;
 import com.pricecomparator.market.Service.ProductPriceHistoryService;
 import com.pricecomparator.market.Service.ProductService;
+import com.pricecomparator.market.Service.WatchListProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,14 @@ import java.util.Optional;
 public class ProductsController {
     private final ProductService productService;
     private final ProductPriceHistoryService productPriceHistoryService;
+    private final WatchListProductService watchListProductService;
 
 
     @Autowired
-    public ProductsController(ProductService productService, ProductPriceHistoryService productPriceHistoryService, ProductPriceHistoryRepository productPriceHistoryRepository) {
+    public ProductsController(ProductService productService, ProductPriceHistoryService productPriceHistoryService, ProductPriceHistoryRepository productPriceHistoryRepository, WatchListProductService watchListProductService) {
         this.productService = productService;
         this.productPriceHistoryService = productPriceHistoryService;
+        this.watchListProductService = watchListProductService;
     }
 
 
@@ -404,6 +408,12 @@ public class ProductsController {
     public ProductBestBuyResponse getBestBuy(@PathVariable String productName)
     {
         return productPriceHistoryService.getBestBuy(productName);
+    }
+
+    @GetMapping("/getMostWanted")
+    public MostWantedRequest getMostWanted()
+    {
+        return watchListProductService.getMostWantedProduct();
     }
 
 
