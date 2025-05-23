@@ -647,6 +647,7 @@ public class ProductPriceHistoryServiceImplementation implements ProductPriceHis
         output.setBrandName(bestProduct.getBrand());
         output.setPrice(finalPrice);
         output.setCurrency(currency);
+        output.setStore(bestProduct.getStore());
 
         return output;
     }
