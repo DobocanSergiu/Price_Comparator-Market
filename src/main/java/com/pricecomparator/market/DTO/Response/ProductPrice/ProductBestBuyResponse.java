@@ -8,15 +8,6 @@ public class ProductBestBuyResponse {
     private String brandName;
     private String currency;
     private BigDecimal price;
-    private String store;
-
-    public String getStore() {
-        return store;
-    }
-
-    public void setStore(String store) {
-        this.store = store;
-    }
 
     public int getProductId() {
         return productId;
