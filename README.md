@@ -5,8 +5,8 @@ The following project is my attempt at the Software Engineer Internship Coding C
 3. Controller contains all api endpoints, separated into 2 files: Product (deals with product inventory and price history) and User (deals with user login validation, user shopping cart and user watch list)
 4. DTO'S are separated for better readability
 
-Database Schema: 
-![Price Comparator-Market-db](https://github.com/user-attachments/assets/54c24c17-6e62-42b5-b4db-820110cc3ed3)
+Database Schema:
+![Price Comparator-Market-db](https://github.com/user-attachments/assets/288ee5f1-1863-46e6-9c91-3bd568acfefe)
 ## Installation
 1. Prerequisite
 Before starting make sure java 17 and PostgreSQL are installed. 
