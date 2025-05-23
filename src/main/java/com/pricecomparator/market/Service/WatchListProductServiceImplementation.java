@@ -280,10 +280,6 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
     public MostWantedRequest getMostWantedProduct()
     {
         List<WatchListProduct> allWatchListProducts = watchListProductRepository.findAll();
-        if (allWatchListProducts.isEmpty()) {
-            return null; // or throw new RuntimeException("No watchlist products found");
-        }
-
         Map<Integer,Integer> dictionary = new HashMap<>();
         for(int i=0;i<allWatchListProducts.size();i++)
         {
@@ -314,11 +310,6 @@ public class WatchListProductServiceImplementation implements WatchListProductSe
                 maxValue = value;
                 maxKey = key;
             }
-        }
-
-        Optional<Product> productOptional = productRepository.findById(maxKey);
-        if (productOptional.isEmpty()) {
-            return null; // or throw new RuntimeException("Product not found with ID: " + maxKey);
         }
 
         Product resultProduct = productRepository.findById(maxKey).get();
