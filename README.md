@@ -1,5 +1,5 @@
 ## Overview
-The following project is my attempt at the Software Engineer Internship Coding Challenge by Accessa.  The application uses a layered application (Repository, Service and Controller) to help separate concerns and improve readability. 
+The following project is my attempt at the Software Engineer Internship Coding Challenge by Accesa.  The application uses a layered application (Repository, Service and Controller) to help separate concerns and improve readability. 
 1. Repository layer uses JPA to interact with the existing PostgreSQL database.
 2. Service Layer contains the majority of the business logic and other helper functions (Metric Conversion, Password salting etc.)
 3. Controller contains all api endpoints, separated into 2 files: Product (deals with product inventory and price history) and User (deals with user login validation, user shopping cart and user watch list)
